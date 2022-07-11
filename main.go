@@ -6,6 +6,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/services/network/mgmt/2019-11-01/network"
 	"github.com/Azure/go-autorest/autorest/azure/auth"
 	"log"
+	"os"
 )
 
 func main() {
@@ -16,7 +17,8 @@ func main() {
 
 	}
 	//fmt.Println(authorizer)
-	var subscriptionId string = ""
+
+	var subscriptionId string = os.Getenv("SUBSCRIPTION_ID")
 
 	nsgClient := network.NewSecurityGroupsClient(subscriptionId)
 	nsgClient.Authorizer = authorizer
