@@ -8,14 +8,34 @@ import (
 	"github.com/Azure/go-autorest/autorest/azure/auth"
 	"log"
 	"os"
+	"strings"
 )
 
 type IP struct {
 	Ip string `json:"ip"`
 }
 
+func RemoveRedundantIPs(ipList []string, currentIP string) []string {
+	// Unique number that is assigned to your network.
+	// First 2 bytes of an IP address.
+	currentIPNetworkPart := strings.Join(strings.Split(currentIP, ".")[:2], ".")
+
+	// If Network Part of current IP exists in an ipList element, remove it.
+	for i := 0; i < len(ipList); i++ {
+		if strings.Contains(ipList[i], currentIPNetworkPart) {
+			//remove i-th ip address
+			ipList = append(ipList[:i], ipList[i+1:]...)
+		}
+	}
+
+	return ipList
+}
+
 func main() {
-	fmt.Println("abcd")
+
+	ips := []string{"49.207.210.12", "49.112.123.32", "49.207.222.12", "49.321.33.21"}
+	fmt.Println(RemoveRedundantIPs(ips, "49.207.12.212"))
+
 	authorizer, err := auth.NewAuthorizerFromEnvironment()
 	if err != nil {
 		log.Printf("Error while creating an new authentication, %v ", err)
@@ -44,7 +64,8 @@ func main() {
 	var IPs []string = []string{"abvc"}
 	fmt.Println(IPs)
 
-	fmt.Println(*rule.SourceAddressPrefixes)
+	SourceAddressPrefixes := *rule.SourceAddressPrefixes
+	fmt.Println(SourceAddressPrefixes)
 
 	ip := utils.GetPublicIP()
 	fmt.Println(ip)
