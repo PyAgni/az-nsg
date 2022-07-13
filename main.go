@@ -1,6 +1,7 @@
 package main
 
 import (
+	"az-nsg/utils"
 	"context"
 	"fmt"
 	"github.com/Azure/azure-sdk-for-go/services/network/mgmt/2019-11-01/network"
@@ -8,6 +9,10 @@ import (
 	"log"
 	"os"
 )
+
+type IP struct {
+	Ip string `json:"ip"`
+}
 
 func main() {
 	fmt.Println("abcd")
@@ -40,7 +45,11 @@ func main() {
 	fmt.Println(IPs)
 
 	fmt.Println(*rule.SourceAddressPrefixes)
-	//fmt.Println(rule)
+
+	ip := utils.GetPublicIP()
+	fmt.Println(ip)
+
+	//fmt.Println(*rule.Body)
 	//rgClient := resources.NewGroupsClient(subscriptionId)
 	//rgClient.Authorizer = authorizer
 	//ctx := context.Background()

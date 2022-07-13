@@ -12,16 +12,16 @@ import (
 
 // IP Struct for parsing response of public IP from https://api.ipify.org/?format=json
 type IP struct {
-	ip string
+	Ip string
 }
 
 const IpApiUrl = "https://api.ipify.org/?format=json"
 
-func GetPublicIP() IP {
+func GetPublicIP() string {
 	res, err := http.Get(IpApiUrl)
 	if err != nil {
 		fmt.Printf("Couldn't get your public IP. Error: %s\n", err)
-		return IP{}
+		return ""
 	}
 	//Close the response body
 	defer func(Body io.ReadCloser) {
@@ -35,13 +35,14 @@ func GetPublicIP() IP {
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		fmt.Printf("Couldn't read IP from response. Error: %s\n", err)
-		return IP{}
+		return ""
 	}
-	var ip IP
-	err = json.Unmarshal(body, &ip)
+	var publicIP IP
+	err = json.Unmarshal(body, &publicIP)
 	if err != nil {
-		return IP{}
+		fmt.Printf("Couldn't unmarshall response body. Error: %s\n", err)
+		return ""
 	}
 
-	return ip
+	return publicIP.Ip
 }
